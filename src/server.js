@@ -1,35 +1,27 @@
-const express = require('express');
-const path = require('path');
+const express = require ('express');
+const path = require ('path');
 
-const app = express();
-const router = express.Router();
+const app = express ();
 
-// Importando o controller
-const postController = require('./controllers/postController');
+// Importando router
+const router = require ('../router');
+
+// EJS
+app.set ('view engine', 'ejs');
+app.set ('views', path.join (__dirname, 'views'));
+
+// Middlewares
+app.use (express.urlencoded ({extended: true}));
+
+// Arquivos estáticos
+app.use (express.static (path.join (__dirname, 'public')));
 
 // Rotas
-router.get('/', postController.index);
+app.use ('/', router);
 
-// Rota para exibir um post específico
-router.get('/posts/:id', postController.show);
-
-// Configuração do EJS como view engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// Configuração para ler dados do formulário
-app.use(express.urlencoded({ extended: true }));
-
-// Configuração para servir arquivos estáticos
-app.use(express.static('public'));
-
-// Usando as rotas
-app.use(router);
-
-// Inicialização do servidor
+// Servidor
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Servidor iniciado!`);
-  console.log(`Rodando em http://localhost:${PORT}/`);
+app.listen (PORT, () => {
+  console.log (`Servidor rodando em http://localhost:${PORT}`);
 });
